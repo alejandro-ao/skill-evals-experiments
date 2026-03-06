@@ -46,7 +46,13 @@ Use ISO-like run IDs, for example:
     "goals_confirmed_at": "2026-03-06T14:05:00Z",
     "prompts_confirmed": true,
     "prompts_confirmed_at": "2026-03-06T14:08:00Z",
-    "notes": "Added two negative-control prompts."
+    "notes": "Added two negative-control prompts.",
+    "prompt_review_method": "row_by_row_keep_edit_drop",
+    "confirmed_case_ids": [
+      "t01",
+      "t02",
+      "n01"
+    ]
   },
   "goals": {
     "outcome": [
@@ -73,6 +79,11 @@ The evaluation run must not start until both are true:
 
 - `user_validation.goals_confirmed`
 - `user_validation.prompts_confirmed`
+
+Also require:
+
+- `user_validation.prompt_review_method = row_by_row_keep_edit_drop`
+- `user_validation.confirmed_case_ids` contains every row ID in `prompts.csv`
 
 ## `prompts.csv` Columns
 
@@ -188,6 +199,16 @@ Require each scored check to reference evidence from run artifacts:
 - Log line or error signature when relevant.
 
 Reject final scoring if evidence pointers are missing.
+
+## Human Validation Heuristic
+
+Before execution, enforce this interaction pattern:
+
+1. Show proposed goals and request explicit goal confirmation.
+2. Show proposed test cases and review each as `keep`, `edit`, or `drop`.
+3. Reprint final test-case table and request one explicit full-set approval.
+4. Persist approved IDs in `user_validation.confirmed_case_ids`.
+5. Block execution if any case lacks explicit confirmation.
 
 ## Output UX Requirements
 

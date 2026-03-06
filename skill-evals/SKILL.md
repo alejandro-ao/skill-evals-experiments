@@ -25,6 +25,12 @@ Before proceeding, present a draft success definition in chat using this structu
 
 Then ask for explicit confirmation. Do not run evals until the user confirms or edits this draft.
 
+Required heuristic:
+
+- If the user gives edits, regenerate the draft once and ask for confirmation again.
+- Do not infer silent approval.
+- Record the final approved version only.
+
 Capture the approved goals in `.agents/evals/<skill-name>/contract.v1.json`:
 
 - Outcome goals: define expected end results and required artifacts.
@@ -66,6 +72,13 @@ Before executing prompts, show the draft prompt set in chat as a compact table:
 - short prompt preview
 
 Ask the user to confirm or edit this set (add/remove/change cases). Do not run prompt execution until confirmed.
+
+Required heuristic for test-case validation:
+
+- Review each row with the user using `keep`, `edit`, or `drop`.
+- For trigger intent, explicitly ask whether `should_trigger` is correct for each edited/new row.
+- After edits, present the final table and request one explicit approval for the full set.
+- If full-set approval is missing, stop and ask again instead of executing.
 
 ## Step 3: Run Prompts and Capture Traces
 
